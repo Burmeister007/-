@@ -18,7 +18,9 @@ from PIL import Image
 from fontTools import subset
 
 ROOT = Path(__file__).resolve().parent
-SOURCE = ROOT.parent / "d0d8d2e4-4e0a-43b1-b3c8-8631ad6672c6.png"
+SOURCE_NAME = "d0d8d2e4-4e0a-43b1-b3c8-8631ad6672c6.png"
+# В репозитории картинка лежит на уровень выше, в архиве с исходниками — рядом.
+SOURCE_CANDIDATES = (ROOT.parent / SOURCE_NAME, ROOT / SOURCE_NAME)
 ASSETS = ROOT / "assets"
 
 # Кадры в исходнике: пять квадратов 418×417 с шагом 440, верх на y=161.
@@ -45,10 +47,16 @@ FACES = {
 }
 
 
+def source_image() -> Path:
+    for path in SOURCE_CANDIDATES:
+        if path.is_file():
+            return path
+    sys.exit("нет исходной картинки " + SOURCE_NAME + ", искал в: "
+             + ", ".join(str(p.parent) for p in SOURCE_CANDIDATES))
+
+
 def cut_panels() -> None:
-    if not SOURCE.is_file():
-        sys.exit(f"нет исходной картинки: {SOURCE}")
-    src = Image.open(SOURCE).convert("RGB")
+    src = Image.open(source_image()).convert("RGB")
     width, height = src.size
 
     for index, left in enumerate(PANEL_X, start=1):
@@ -88,7 +96,7 @@ def main() -> None:
     cut_panels()
     print("шрифты:")
     cut_fonts()
-    print("готово — дальше: python3 site/build.py")
+    print(f"готово — дальше: python3 {ROOT.name}/build.py")
 
 
 if __name__ == "__main__":
