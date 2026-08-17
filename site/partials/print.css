@@ -1,0 +1,114 @@
+  /* ---------- Печать и «сохранить в PDF»: страницу отправляют как КП, поэтому
+       лист должен быть белым, без интерфейса и без разрывов посреди этапа.
+       Экранные темы остаются как есть — здесь только переопределение токенов. */
+
+  @media print {
+    :root {
+      --ground: #ffffff;
+      --surface: #ffffff;
+      --surface-lift: #f2f4f7;
+      --hairline: #b9c4d1;
+      --chalk: #101c2c;
+      --mist: #3d4c5f;
+      --steel: #4a5b70;
+      --amber: #94500a;
+      --amber-deep: #94500a;
+      --tile-ring: #b9c4d1;
+      --shadow: none;
+    }
+
+    @page {
+      margin: 14mm 12mm;
+    }
+
+    body {
+      background: #ffffff;
+      color: #101c2c;
+      font-size: 10.5pt;
+      line-height: 1.5;
+    }
+
+    /* Интерфейс на бумаге не нужен: навигация, кнопки, форма. */
+    .nav,
+    .close-actions,
+    .form,
+    .hero-art,
+    .hero-scrim { display: none; }
+
+    /* Герой печатается как обычный заголовок, а не как тёмная плашка. */
+    .hero {
+      border-bottom: 1px solid var(--hairline);
+      padding-bottom: 0.5rem;
+    }
+
+    .hero-inner { padding-block: 0 0.5rem; }
+
+    .hero h1 { font-size: 26pt; color: #101c2c; }
+    .hero h1 .thin { color: #94500a; }
+    .hero .eyebrow { color: #94500a; }
+    .hero p.lede { color: #3d4c5f; font-size: 11pt; max-width: none; }
+    .hero .facts b { color: #101c2c; font-size: 15pt; }
+    .hero .facts div { color: #3d4c5f; }
+
+    .wrap { width: 100%; }
+
+    .section { padding-block: 0.9rem; }
+    .section-lead { padding-top: 0.9rem; }
+    .schedule { padding-block: 0.9rem; }
+    .stages { gap: 1rem; padding-bottom: 0.9rem; }
+
+    /* Анимация появления на печати не отрабатывает — раскрываем всё сразу. */
+    .reveal,
+    .reveal.seen {
+      opacity: 1 !important;
+      transform: none !important;
+    }
+
+    .ribbon.pending div::after { transform: scaleX(var(--fill, 1)) !important; }
+
+    /* Этап, комплектация и вопрос не должны рваться между листами. */
+    .stage,
+    .package,
+    .faq details,
+    .spec tr {
+      break-inside: avoid;
+    }
+
+    /* Лист уже 900 px, поэтому включилась узкая раскладка с картинкой во всю
+       ширину — на бумаге это лишние страницы. Возвращаем два столбца. */
+    .stage {
+      grid-template-columns: 2.2rem 32% minmax(0, 1fr);
+      gap: 0 1rem;
+    }
+
+    .stage-art {
+      grid-column: auto;
+      margin-bottom: 0;
+      aspect-ratio: 1 / 1;
+      outline: 1px solid var(--hairline);
+      box-shadow: none;
+    }
+
+    .stage-body { grid-column: auto; }
+
+    .yield { background: #f2f4f7; }
+
+    /* На листе горизонтальной прокрутки нет — таблица должна поместиться. */
+    .spec { min-width: 0; font-size: 9.5pt; }
+    .spec-scroll { overflow: visible; }
+
+    /* Все вопросы раскрыты: на бумаге их не нажать. */
+    .faq details { break-inside: avoid; }
+    .faq summary { cursor: default; }
+    .faq summary::before { content: "·"; }
+
+    .request-inner { padding-block: 0.9rem; }
+
+    .site-footer,
+    .close { border-top: 1px solid var(--hairline); }
+
+    .footer-inner { padding-block: 0.9rem; }
+    .footer-inner a { color: #101c2c; text-decoration: none; }
+
+    a[href^="#"] { text-decoration: none; color: inherit; }
+  }

@@ -90,6 +90,27 @@
     margin-inline: auto;
   }
 
+  /* Ссылка для клавиатуры: видна только когда получает фокус. */
+  .skip {
+    position: absolute;
+    left: -9999px;
+    top: 0;
+    z-index: 30;
+    font-family: "SiteMono", ui-monospace, monospace;
+    font-size: 0.76rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    text-decoration: none;
+    background: var(--amber);
+    color: #04101f;
+    padding: 0.8rem 1.2rem;
+  }
+
+  .skip:focus {
+    left: 0.75rem;
+    top: 0.75rem;
+  }
+
   .eyebrow {
     font-family: "SiteMono", ui-monospace, monospace;
     font-size: 0.72rem;
