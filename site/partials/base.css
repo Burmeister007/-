@@ -1,0 +1,525 @@
+  @font-face {
+    font-family: "SiteDisplay";
+    src: url("{{ASSET:display.woff2}}") format("woff2");
+    font-weight: 700;
+    font-display: block;
+  }
+  @font-face {
+    font-family: "SiteBody";
+    src: url("{{ASSET:body.woff2}}") format("woff2");
+    font-weight: 400;
+    font-display: block;
+  }
+  @font-face {
+    font-family: "SiteBody";
+    src: url("{{ASSET:bodyb.woff2}}") format("woff2");
+    font-weight: 700;
+    font-display: block;
+  }
+  @font-face {
+    font-family: "SiteMono";
+    src: url("{{ASSET:mono.woff2}}") format("woff2");
+    font-weight: 400;
+    font-display: block;
+  }
+
+  /* Dark-first identity, taken from the illustrations: night-site navy,
+     steel blue, drafting chalk, hard-hat amber. The bare :root block is the
+     dark set; the light set is a blueprint-paper inversion below. */
+  :root {
+    --ground: #04101f;
+    --surface: #0a1b2e;
+    --surface-lift: #102741;
+    --hairline: #1d3552;
+    --chalk: #e6edf5;
+    --mist: #93a9c0;
+    --steel: #4a6e93;
+    --amber: #f0a02c;
+    --amber-deep: #c8741a;
+    --tile-ring: rgba(230, 237, 245, 0.09);
+    --shadow: 0 18px 40px rgba(0, 0, 0, 0.45);
+
+    --step: clamp(1rem, 0.6rem + 1.1vw, 1.5rem);
+    --measure: 62ch;
+  }
+
+  @media (prefers-color-scheme: light) {
+    :root:not([data-theme="dark"]) {
+      --ground: #eceef2;
+      --surface: #ffffff;
+      --surface-lift: #f4f6f9;
+      --hairline: #ccd5e0;
+      --chalk: #0a1b2e;
+      --mist: #566f8d;
+      --steel: #3c5f83;
+      --amber: #a95c07;
+      --amber-deep: #8a4a06;
+      --tile-ring: rgba(10, 27, 46, 0.14);
+      --shadow: 0 14px 32px rgba(20, 40, 65, 0.14);
+    }
+  }
+
+  :root[data-theme="light"] {
+    --ground: #eceef2;
+    --surface: #ffffff;
+    --surface-lift: #f4f6f9;
+    --hairline: #ccd5e0;
+    --chalk: #0a1b2e;
+    --mist: #566f8d;
+    --steel: #3c5f83;
+    --amber: #a95c07;
+    --amber-deep: #8a4a06;
+    --tile-ring: rgba(10, 27, 46, 0.14);
+    --shadow: 0 14px 32px rgba(20, 40, 65, 0.14);
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--ground);
+    color: var(--chalk);
+    font-family: "SiteBody", "Helvetica Neue", Arial, sans-serif;
+    font-size: clamp(1rem, 0.96rem + 0.2vw, 1.075rem);
+    line-height: 1.62;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap {
+    width: min(1180px, 100% - 2 * var(--step));
+    margin-inline: auto;
+  }
+
+  .eyebrow {
+    font-family: "SiteMono", ui-monospace, monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--amber);
+    margin: 0;
+  }
+
+  /* ---------- hero ---------- */
+
+  .hero {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    border-bottom: 1px solid var(--hairline);
+  }
+
+  .hero-art {
+    position: absolute;
+    inset: 0;
+    z-index: -2;
+    background-image: url("{{ASSET:hero.webp}}");
+    background-size: cover;
+    background-position: center;
+  }
+
+  .hero-scrim {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background:
+      linear-gradient(180deg, rgba(4, 16, 31, 0.15) 0%, rgba(4, 16, 31, 0.92) 62%, #04101f 100%),
+      linear-gradient(90deg, rgba(4, 16, 31, 0.92) 0%, rgba(4, 16, 31, 0.35) 70%);
+  }
+
+  .hero-inner {
+    padding-block: clamp(4.5rem, 3rem + 11vw, 10rem) clamp(2.5rem, 2rem + 3vw, 4rem);
+  }
+
+  .hero h1 {
+    font-family: "SiteDisplay", "Helvetica Neue", Arial, sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: -0.015em;
+    line-height: 0.98;
+    font-size: clamp(2.4rem, 1.2rem + 6.4vw, 5.4rem);
+    text-wrap: balance;
+    margin: 0.5rem 0 0;
+    color: #e6edf5;
+  }
+
+  .hero h1 .thin {
+    display: block;
+    color: var(--amber);
+  }
+
+  .hero p.lede {
+    max-width: 46ch;
+    margin: 1.4rem 0 0;
+    color: #c2d1e0;
+    font-size: clamp(1.02rem, 0.95rem + 0.4vw, 1.2rem);
+  }
+
+  /* The hero band keeps its own dark palette in both themes: it sits on the
+     illustration, not on the page ground. */
+  .hero .eyebrow { color: #f0a02c; }
+
+  .hero .btn {
+    background: #f0a02c;
+    border-color: #f0a02c;
+    color: #04101f;
+  }
+
+  .hero .btn.ghost {
+    background: transparent;
+    border-color: rgba(230, 237, 245, 0.4);
+    color: #e6edf5;
+  }
+
+  .hero .btn:focus-visible { outline-color: #f0a02c; }
+
+  .facts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: clamp(1.5rem, 1rem + 3vw, 3.5rem);
+    margin: clamp(2rem, 1.5rem + 2vw, 3rem) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .facts div {
+    font-family: "SiteMono", ui-monospace, monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: #93a9c0;
+  }
+
+  .facts b {
+    display: block;
+    font-family: "SiteDisplay", Arial, sans-serif;
+    font-weight: 700;
+    font-size: clamp(1.6rem, 1.2rem + 1.4vw, 2.3rem);
+    letter-spacing: -0.01em;
+    line-height: 1.1;
+    color: #e6edf5;
+    font-variant-numeric: tabular-nums;
+    margin-bottom: 0.25rem;
+  }
+
+  /* ---------- schedule ribbon ---------- */
+
+  .schedule {
+    padding-block: clamp(2.5rem, 2rem + 2vw, 4rem);
+  }
+
+  .schedule-head {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 0.75rem 2rem;
+    padding-bottom: 1.1rem;
+  }
+
+  .schedule-head span {
+    font-family: "SiteMono", ui-monospace, monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--mist);
+  }
+
+  .ribbon {
+    display: grid;
+    gap: 3px;
+    grid-template-columns: var(--tracks);
+  }
+
+  .ribbon div {
+    position: relative;
+    height: 0.75rem;
+    background: var(--surface-lift);
+    border: 1px solid var(--hairline);
+    overflow: hidden;
+  }
+
+  .ribbon div::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, var(--amber-deep), var(--amber));
+    transform: scaleX(var(--fill, 1));
+    transform-origin: left;
+  }
+
+  /* Полоса графика пропорциональна срокам, подписи — равными колонками:
+     у коротких этапов на пропорциональную подпись не хватает ширины. */
+  .ribbon-legend {
+    display: grid;
+    gap: 0.5rem 1rem;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    margin-top: 0.75rem;
+  }
+
+  .ribbon-legend div {
+    font-family: "SiteMono", ui-monospace, monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.04em;
+    color: var(--mist);
+    font-variant-numeric: tabular-nums;
+    padding-right: 0.4rem;
+    hyphens: auto;
+  }
+
+  .ribbon-legend b {
+    display: block;
+    color: var(--chalk);
+    font-weight: 400;
+  }
+
+  /* ---------- stages ---------- */
+
+  .stages {
+    padding-bottom: clamp(3rem, 2rem + 4vw, 6rem);
+    display: grid;
+    gap: clamp(2.5rem, 1.5rem + 4vw, 5rem);
+  }
+
+  .stage {
+    display: grid;
+    grid-template-columns: 3.25rem minmax(0, 5fr) minmax(0, 6fr);
+    gap: 0 clamp(1.25rem, 0.8rem + 2vw, 2.75rem);
+    align-items: start;
+  }
+
+  .stage-index {
+    position: relative;
+    font-family: "SiteMono", ui-monospace, monospace;
+    font-size: 0.82rem;
+    letter-spacing: 0.06em;
+    color: var(--amber);
+    padding-top: 0.15rem;
+    font-variant-numeric: tabular-nums;
+    align-self: stretch;
+  }
+
+  .stage-index::before {
+    content: "";
+    position: absolute;
+    left: 0.28rem;
+    top: 2.1rem;
+    bottom: -0.6rem;
+    width: 1px;
+    background: linear-gradient(180deg, var(--hairline), transparent);
+  }
+
+  .stage:last-child .stage-index::before { display: none; }
+
+  .stage-art {
+    margin: 0;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    background: var(--surface);
+    box-shadow: var(--shadow);
+    outline: 1px solid var(--tile-ring);
+    outline-offset: -1px;
+  }
+
+  .stage-art img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .stage-body h2 {
+    font-family: "SiteDisplay", "Helvetica Neue", Arial, sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: -0.005em;
+    line-height: 1.06;
+    font-size: clamp(1.35rem, 1.1rem + 1.1vw, 2.05rem);
+    text-wrap: balance;
+    margin: 0.1rem 0 0.9rem;
+  }
+
+  .stage-body p {
+    margin: 0;
+    max-width: var(--measure);
+    color: var(--mist);
+  }
+
+  .term {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: "SiteMono", ui-monospace, monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--amber);
+    border: 1px solid var(--hairline);
+    padding: 0.3rem 0.6rem;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .term::before {
+    content: "";
+    width: 0.4rem;
+    height: 0.4rem;
+    background: var(--amber);
+  }
+
+  .yield {
+    margin: 1.4rem 0 0;
+    padding: 1.1rem 1.25rem;
+    background: var(--surface);
+    border-left: 2px solid var(--amber);
+  }
+
+  .yield dt {
+    font-family: "SiteMono", ui-monospace, monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--mist);
+    margin-bottom: 0.5rem;
+  }
+
+  .yield dd {
+    margin: 0;
+    font-size: 0.97rem;
+  }
+
+  .yield dd + dt { margin-top: 1.05rem; }
+
+  .check {
+    display: flex;
+    gap: 0.6rem;
+    margin-top: 1rem;
+    font-family: "SiteMono", ui-monospace, monospace;
+    font-size: 0.76rem;
+    line-height: 1.5;
+    color: var(--steel);
+  }
+
+  .check::before {
+    content: "✓";
+    color: var(--amber);
+    flex: none;
+  }
+
+  /* ---------- close ---------- */
+
+  .close {
+    border-top: 1px solid var(--hairline);
+    background: var(--surface);
+  }
+
+  .close-inner {
+    padding-block: clamp(2.75rem, 2rem + 4vw, 5rem);
+    display: grid;
+    gap: clamp(1.5rem, 1rem + 3vw, 3.5rem);
+    grid-template-columns: minmax(0, 1fr);
+    align-items: start;
+  }
+
+  .close h2 {
+    font-family: "SiteDisplay", Arial, sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: -0.01em;
+    line-height: 1.05;
+    font-size: clamp(1.5rem, 1.2rem + 1.6vw, 2.4rem);
+    margin: 0.6rem 0 0.9rem;
+    text-wrap: balance;
+  }
+
+  .close p {
+    margin: 0;
+    max-width: 50ch;
+    color: var(--mist);
+  }
+
+  .close-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.85rem;
+    margin-top: 1.6rem;
+  }
+
+  .btn {
+    font-family: "SiteMono", ui-monospace, monospace;
+    font-size: 0.76rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    text-decoration: none;
+    padding: 0.85rem 1.4rem;
+    border: 1px solid var(--amber);
+    color: var(--ground);
+    background: var(--amber);
+  }
+
+  .btn.ghost {
+    background: transparent;
+    color: var(--chalk);
+    border-color: var(--hairline);
+  }
+
+  .btn:focus-visible,
+  a:focus-visible {
+    outline: 2px solid var(--amber);
+    outline-offset: 3px;
+  }
+
+  .draft-note {
+    border-top: 1px solid var(--hairline);
+    padding-block: 1.25rem 2.5rem;
+    font-family: "SiteMono", ui-monospace, monospace;
+    font-size: 0.7rem;
+    line-height: 1.6;
+    letter-spacing: 0.03em;
+    color: var(--steel);
+  }
+
+  /* ---------- motion ---------- */
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(14px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+
+  .reveal.seen {
+    opacity: 1;
+    transform: none;
+  }
+
+  .ribbon div::after {
+    transition: transform 0.9s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+
+  .ribbon.pending div::after { transform: scaleX(0); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .reveal, .reveal.seen { opacity: 1; transform: none; transition: none; }
+    .ribbon div::after { transition: none; }
+    .ribbon.pending div::after { transform: scaleX(var(--fill, 1)); }
+  }
+
+  /* ---------- narrow ---------- */
+
+  @media (max-width: 900px) {
+    .stage {
+      grid-template-columns: 2.5rem minmax(0, 1fr);
+      gap: 0 1rem;
+    }
+    .stage-art {
+      grid-column: 2;
+      margin-bottom: 1.4rem;
+      aspect-ratio: 16 / 10;
+    }
+    .stage-body { grid-column: 2; }
+    .stage-index::before { top: 1.9rem; }
+    .ribbon-legend { grid-template-columns: 1fr 1fr; }
+    .ribbon-legend div { padding-right: 0; }
+  }
+
+  @media (min-width: 901px) {
+    .close-inner { grid-template-columns: 3.25rem minmax(0, 5fr) minmax(0, 6fr); }
+  }

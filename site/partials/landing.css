@@ -1,0 +1,494 @@
+  /* ---------- Стили только для одностраничника: навигация, комплектации,
+       таблица конструктива, вопросы, форма, подвал. Токены, типографика и
+       блок этапов приходят из partials/base.css. ---------- */
+
+  html { scroll-behavior: smooth; }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+  }
+
+  [id] { scroll-margin-top: 4.5rem; }
+
+  .section {
+    padding-block: clamp(3rem, 2rem + 4vw, 5.5rem);
+  }
+
+  .section + .section { padding-top: 0; }
+
+  /* Заголовок перед блоком этапов: вертикальный ритм дальше задают сами
+     .schedule и .stages, поэтому снизу отступа нет. */
+  .section-lead { padding-top: clamp(3rem, 2rem + 4vw, 5.5rem); }
+
+  .section-lead .section-head { margin-bottom: 0; }
+
+  .section-head {
+    display: grid;
+    gap: 0.75rem;
+    max-width: 58ch;
+    margin-bottom: clamp(1.75rem, 1.2rem + 2vw, 3rem);
+  }
+
+  .section-head h2 {
+    font-family: "SiteDisplay", "Helvetica Neue", Arial, sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: -0.01em;
+    line-height: 1.04;
+    font-size: clamp(1.6rem, 1.25rem + 1.9vw, 2.75rem);
+    text-wrap: balance;
+    margin: 0;
+  }
+
+  .section-head p {
+    margin: 0;
+    color: var(--mist);
+    max-width: var(--measure);
+  }
+
+  /* ---------- навигация ---------- */
+
+  .nav {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background: color-mix(in srgb, var(--ground) 88%, transparent);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--hairline);
+  }
+
+  .nav-inner {
+    display: flex;
+    align-items: center;
+    gap: clamp(1rem, 0.5rem + 2vw, 2.5rem);
+    min-height: 4rem;
+  }
+
+  .brand {
+    display: flex;
+    align-items: baseline;
+    gap: 0.55rem;
+    text-decoration: none;
+    color: var(--chalk);
+    margin-right: auto;
+  }
+
+  .brand b {
+    font-family: "SiteDisplay", Arial, sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    font-size: 1.15rem;
+  }
+
+  .brand span {
+    font-family: "SiteMono", ui-monospace, monospace;
+    font-size: 0.64rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--mist);
+  }
+
+  .nav-links {
+    display: flex;
+    gap: clamp(0.9rem, 0.5rem + 1.4vw, 2rem);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .nav-links a {
+    font-family: "SiteMono", ui-monospace, monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--mist);
+    padding-block: 0.4rem;
+    border-bottom: 1px solid transparent;
+  }
+
+  .nav-links a:hover { color: var(--chalk); border-bottom-color: var(--amber); }
+
+  .nav .btn { padding: 0.7rem 1.1rem; }
+
+  @media (max-width: 860px) {
+    .nav-links { display: none; }
+  }
+
+  @media (max-width: 460px) {
+    .nav .btn { display: none; }
+    .brand { margin-right: 0; }
+  }
+
+  /* ---------- комплектации ---------- */
+
+  .packages {
+    display: grid;
+    gap: clamp(1rem, 0.6rem + 1.6vw, 1.75rem);
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr));
+    align-items: start;
+  }
+
+  .package {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    background: var(--surface);
+    border: 1px solid var(--hairline);
+    border-top: 2px solid var(--hairline);
+    padding: clamp(1.25rem, 1rem + 1vw, 1.9rem);
+    height: 100%;
+  }
+
+  .package.lead { border-top-color: var(--amber); }
+
+  .package-tag {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1rem;
+    font-family: "SiteMono", ui-monospace, monospace;
+    font-size: 0.66rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--mist);
+  }
+
+  .package.lead .package-tag em {
+    font-style: normal;
+    color: var(--amber);
+  }
+
+  .package h3 {
+    font-family: "SiteDisplay", Arial, sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: -0.005em;
+    line-height: 1.1;
+    font-size: 1.3rem;
+    margin: 0;
+    text-wrap: balance;
+  }
+
+  .price {
+    font-family: "SiteDisplay", Arial, sans-serif;
+    font-weight: 700;
+    font-size: clamp(1.5rem, 1.25rem + 1vw, 1.95rem);
+    line-height: 1.1;
+    font-variant-numeric: tabular-nums;
+    color: var(--chalk);
+  }
+
+  .price small {
+    display: block;
+    font-family: "SiteMono", ui-monospace, monospace;
+    font-weight: 400;
+    font-size: 0.66rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--mist);
+    margin-top: 0.4rem;
+  }
+
+  .package ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: 0.55rem;
+    font-size: 0.95rem;
+  }
+
+  .package li {
+    display: grid;
+    grid-template-columns: 1rem 1fr;
+    gap: 0.5rem;
+    color: var(--chalk);
+  }
+
+  .package li::before {
+    content: "+";
+    font-family: "SiteMono", ui-monospace, monospace;
+    color: var(--amber);
+  }
+
+  .package li.out {
+    color: var(--steel);
+  }
+
+  .package li.out::before {
+    content: "−";
+    color: var(--steel);
+  }
+
+  .package footer {
+    margin-top: auto;
+    padding-top: 0.5rem;
+    font-family: "SiteMono", ui-monospace, monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--mist);
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* ---------- конструктив ---------- */
+
+  .spec-scroll {
+    overflow-x: auto;
+    border: 1px solid var(--hairline);
+    background: var(--surface);
+  }
+
+  .spec {
+    border-collapse: collapse;
+    width: 100%;
+    min-width: 40rem;
+    font-size: 0.95rem;
+  }
+
+  .spec caption {
+    caption-side: bottom;
+    text-align: left;
+    padding: 0.9rem 1.1rem;
+    font-family: "SiteMono", ui-monospace, monospace;
+    font-size: 0.7rem;
+    line-height: 1.6;
+    letter-spacing: 0.04em;
+    color: var(--steel);
+    border-top: 1px solid var(--hairline);
+  }
+
+  .spec th,
+  .spec td {
+    text-align: left;
+    padding: 0.85rem 1.1rem;
+    border-bottom: 1px solid var(--hairline);
+    vertical-align: top;
+  }
+
+  .spec thead th {
+    font-family: "SiteMono", ui-monospace, monospace;
+    font-size: 0.66rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--mist);
+    font-weight: 400;
+    background: var(--surface-lift);
+    white-space: nowrap;
+  }
+
+  .spec tbody th {
+    font-weight: 700;
+    width: 12rem;
+  }
+
+  .spec td:last-child {
+    font-family: "SiteMono", ui-monospace, monospace;
+    font-size: 0.82rem;
+    color: var(--mist);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+
+  .spec tbody tr:last-child th,
+  .spec tbody tr:last-child td { border-bottom: 0; }
+
+  /* ---------- вопросы ---------- */
+
+  .faq {
+    display: grid;
+    border-top: 1px solid var(--hairline);
+    max-width: 68ch;
+  }
+
+  .faq details {
+    border-bottom: 1px solid var(--hairline);
+  }
+
+  .faq summary {
+    display: flex;
+    align-items: baseline;
+    gap: 0.9rem;
+    padding: 1.1rem 0;
+    cursor: pointer;
+    list-style: none;
+    font-weight: 700;
+    font-size: 1.02rem;
+  }
+
+  .faq summary::-webkit-details-marker { display: none; }
+
+  .faq summary::before {
+    content: "+";
+    font-family: "SiteMono", ui-monospace, monospace;
+    color: var(--amber);
+    flex: none;
+    width: 0.9rem;
+  }
+
+  .faq details[open] summary::before { content: "−"; }
+
+  .faq summary:hover { color: var(--amber); }
+
+  .faq summary:focus-visible {
+    outline: 2px solid var(--amber);
+    outline-offset: 3px;
+  }
+
+  .faq p {
+    margin: 0 0 1.2rem 1.8rem;
+    color: var(--mist);
+    max-width: var(--measure);
+  }
+
+  /* ---------- заявка ---------- */
+
+  .request {
+    border-top: 1px solid var(--hairline);
+    background: var(--surface);
+  }
+
+  .request-inner {
+    padding-block: clamp(2.75rem, 2rem + 4vw, 5rem);
+    display: grid;
+    gap: clamp(1.75rem, 1rem + 3vw, 3.5rem);
+    align-items: start;
+  }
+
+  @media (min-width: 901px) {
+    .request-inner { grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); }
+  }
+
+  .request h2 {
+    font-family: "SiteDisplay", "Helvetica Neue", Arial, sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: -0.01em;
+    line-height: 1.05;
+    font-size: clamp(1.5rem, 1.2rem + 1.6vw, 2.4rem);
+    text-wrap: balance;
+    margin: 0.6rem 0 0.9rem;
+  }
+
+  .request > .wrap > div > p {
+    margin: 0;
+    color: var(--mist);
+    max-width: var(--measure);
+  }
+
+  .form {
+    display: grid;
+    gap: 0.9rem;
+  }
+
+  .field {
+    display: grid;
+    gap: 0.35rem;
+  }
+
+  .field span {
+    font-family: "SiteMono", ui-monospace, monospace;
+    font-size: 0.66rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--mist);
+  }
+
+  .field input,
+  .field textarea {
+    font: inherit;
+    font-size: 0.97rem;
+    color: var(--chalk);
+    background: var(--ground);
+    border: 1px solid var(--hairline);
+    padding: 0.7rem 0.8rem;
+    width: 100%;
+    border-radius: 0;
+  }
+
+  .field textarea {
+    min-height: 5.5rem;
+    resize: vertical;
+  }
+
+  .field input:focus-visible,
+  .field textarea:focus-visible {
+    outline: 2px solid var(--amber);
+    outline-offset: 1px;
+  }
+
+  .form-row {
+    display: grid;
+    gap: 0.9rem;
+  }
+
+  @media (min-width: 520px) {
+    .form-row { grid-template-columns: 1fr 1fr; }
+  }
+
+  .form button {
+    justify-self: start;
+    cursor: pointer;
+    font-family: "SiteMono", ui-monospace, monospace;
+    font-size: 0.76rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    padding: 0.9rem 1.5rem;
+    border: 1px solid var(--amber);
+    background: var(--amber);
+    color: var(--ground);
+  }
+
+  .form button:focus-visible {
+    outline: 2px solid var(--chalk);
+    outline-offset: 2px;
+  }
+
+  .form-note {
+    font-family: "SiteMono", ui-monospace, monospace;
+    font-size: 0.7rem;
+    line-height: 1.6;
+    color: var(--steel);
+    margin: 0;
+  }
+
+  .form-note[data-state="warn"] { color: var(--amber); }
+
+  /* ---------- подвал ---------- */
+
+  .site-footer {
+    border-top: 1px solid var(--hairline);
+    background: var(--ground);
+  }
+
+  .footer-inner {
+    padding-block: clamp(2rem, 1.5rem + 2vw, 3rem);
+    display: grid;
+    gap: 1.5rem clamp(1.5rem, 1rem + 3vw, 3.5rem);
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
+  }
+
+  .footer-inner dt {
+    font-family: "SiteMono", ui-monospace, monospace;
+    font-size: 0.66rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--mist);
+    margin-bottom: 0.5rem;
+  }
+
+  .footer-inner dd {
+    margin: 0;
+    font-size: 0.95rem;
+    line-height: 1.7;
+  }
+
+  .footer-inner a {
+    color: var(--chalk);
+    text-decoration-color: var(--steel);
+    text-underline-offset: 3px;
+  }
+
+  .footer-inner a:hover { color: var(--amber); }
