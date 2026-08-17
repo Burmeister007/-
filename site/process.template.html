@@ -1,0 +1,727 @@
+<title>От участка до ключей</title>
+
+<style>
+  @font-face {
+    font-family: "SiteDisplay";
+    src: url("{{ASSET:display.woff2}}") format("woff2");
+    font-weight: 700;
+    font-display: block;
+  }
+  @font-face {
+    font-family: "SiteBody";
+    src: url("{{ASSET:body.woff2}}") format("woff2");
+    font-weight: 400;
+    font-display: block;
+  }
+  @font-face {
+    font-family: "SiteBody";
+    src: url("{{ASSET:bodyb.woff2}}") format("woff2");
+    font-weight: 700;
+    font-display: block;
+  }
+  @font-face {
+    font-family: "SiteMono";
+    src: url("{{ASSET:mono.woff2}}") format("woff2");
+    font-weight: 400;
+    font-display: block;
+  }
+
+  /* Dark-first identity, taken from the illustrations: night-site navy,
+     steel blue, drafting chalk, hard-hat amber. The bare :root block is the
+     dark set; the light set is a blueprint-paper inversion below. */
+  :root {
+    --ground: #04101f;
+    --surface: #0a1b2e;
+    --surface-lift: #102741;
+    --hairline: #1d3552;
+    --chalk: #e6edf5;
+    --mist: #93a9c0;
+    --steel: #4a6e93;
+    --amber: #f0a02c;
+    --amber-deep: #c8741a;
+    --scrim-a: rgba(4, 16, 31, 0.15);
+    --scrim-b: rgba(4, 16, 31, 0.92);
+    --tile-ring: rgba(230, 237, 245, 0.09);
+    --shadow: 0 18px 40px rgba(0, 0, 0, 0.45);
+
+    --step: clamp(1rem, 0.6rem + 1.1vw, 1.5rem);
+    --measure: 62ch;
+  }
+
+  @media (prefers-color-scheme: light) {
+    :root:not([data-theme="dark"]) {
+      --ground: #eceef2;
+      --surface: #ffffff;
+      --surface-lift: #f4f6f9;
+      --hairline: #ccd5e0;
+      --chalk: #0a1b2e;
+      --mist: #566f8d;
+      --steel: #3c5f83;
+      --amber: #a95c07;
+      --amber-deep: #8a4a06;
+      --scrim-a: rgba(4, 16, 31, 0.25);
+      --scrim-b: rgba(4, 16, 31, 0.88);
+      --tile-ring: rgba(10, 27, 46, 0.14);
+      --shadow: 0 14px 32px rgba(20, 40, 65, 0.14);
+    }
+  }
+
+  :root[data-theme="light"] {
+    --ground: #eceef2;
+    --surface: #ffffff;
+    --surface-lift: #f4f6f9;
+    --hairline: #ccd5e0;
+    --chalk: #0a1b2e;
+    --mist: #566f8d;
+    --steel: #3c5f83;
+    --amber: #a95c07;
+    --amber-deep: #8a4a06;
+    --scrim-a: rgba(4, 16, 31, 0.25);
+    --scrim-b: rgba(4, 16, 31, 0.88);
+    --tile-ring: rgba(10, 27, 46, 0.14);
+    --shadow: 0 14px 32px rgba(20, 40, 65, 0.14);
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--ground);
+    color: var(--chalk);
+    font-family: "SiteBody", "Helvetica Neue", Arial, sans-serif;
+    font-size: clamp(1rem, 0.96rem + 0.2vw, 1.075rem);
+    line-height: 1.62;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap {
+    width: min(1180px, 100% - 2 * var(--step));
+    margin-inline: auto;
+  }
+
+  .eyebrow {
+    font-family: "SiteMono", ui-monospace, monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--amber);
+    margin: 0;
+  }
+
+  /* ---------- hero ---------- */
+
+  .hero {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    border-bottom: 1px solid var(--hairline);
+  }
+
+  .hero-art {
+    position: absolute;
+    inset: 0;
+    z-index: -2;
+    background-image: url("{{ASSET:hero.webp}}");
+    background-size: cover;
+    background-position: center;
+  }
+
+  .hero-scrim {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background:
+      linear-gradient(180deg, var(--scrim-a) 0%, var(--scrim-b) 62%, var(--ground) 100%),
+      linear-gradient(90deg, var(--scrim-b) 0%, rgba(4, 16, 31, 0.35) 70%);
+  }
+
+  .hero-inner {
+    padding-block: clamp(4.5rem, 3rem + 11vw, 10rem) clamp(2.5rem, 2rem + 3vw, 4rem);
+  }
+
+  .hero h1 {
+    font-family: "SiteDisplay", "Helvetica Neue", Arial, sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: -0.015em;
+    line-height: 0.98;
+    font-size: clamp(2.4rem, 1.2rem + 6.4vw, 5.4rem);
+    text-wrap: balance;
+    margin: 0.5rem 0 0;
+    color: #e6edf5;
+  }
+
+  .hero h1 .thin {
+    display: block;
+    color: var(--amber);
+  }
+
+  .hero p.lede {
+    max-width: 46ch;
+    margin: 1.4rem 0 0;
+    color: #c2d1e0;
+    font-size: clamp(1.02rem, 0.95rem + 0.4vw, 1.2rem);
+  }
+
+  /* The hero band keeps its own dark palette in both themes: it sits on the
+     illustration, not on the page ground. */
+  .hero .eyebrow { color: #f0a02c; }
+
+  .facts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: clamp(1.5rem, 1rem + 3vw, 3.5rem);
+    margin: clamp(2rem, 1.5rem + 2vw, 3rem) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .facts div {
+    font-family: "SiteMono", ui-monospace, monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: #93a9c0;
+  }
+
+  .facts b {
+    display: block;
+    font-family: "SiteDisplay", Arial, sans-serif;
+    font-weight: 700;
+    font-size: clamp(1.6rem, 1.2rem + 1.4vw, 2.3rem);
+    letter-spacing: -0.01em;
+    line-height: 1.1;
+    color: #e6edf5;
+    font-variant-numeric: tabular-nums;
+    margin-bottom: 0.25rem;
+  }
+
+  /* ---------- schedule ribbon ---------- */
+
+  .schedule {
+    padding-block: clamp(2.5rem, 2rem + 2vw, 4rem);
+  }
+
+  .schedule-head {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 0.75rem 2rem;
+    padding-bottom: 1.1rem;
+  }
+
+  .schedule-head span {
+    font-family: "SiteMono", ui-monospace, monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--mist);
+  }
+
+  .ribbon {
+    display: grid;
+    gap: 3px;
+    grid-template-columns: var(--tracks);
+  }
+
+  .ribbon div {
+    position: relative;
+    height: 0.75rem;
+    background: var(--surface-lift);
+    border: 1px solid var(--hairline);
+    overflow: hidden;
+  }
+
+  .ribbon div::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, var(--amber-deep), var(--amber));
+    transform: scaleX(var(--fill, 1));
+    transform-origin: left;
+  }
+
+  /* Полоса графика пропорциональна срокам, подписи — равными колонками:
+     у коротких этапов на пропорциональную подпись не хватает ширины. */
+  .ribbon-legend {
+    display: grid;
+    gap: 0.5rem 1rem;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    margin-top: 0.75rem;
+  }
+
+  .ribbon-legend div {
+    font-family: "SiteMono", ui-monospace, monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.04em;
+    color: var(--mist);
+    font-variant-numeric: tabular-nums;
+    padding-right: 0.4rem;
+    hyphens: auto;
+  }
+
+  .ribbon-legend b {
+    display: block;
+    color: var(--chalk);
+    font-weight: 400;
+  }
+
+  /* ---------- stages ---------- */
+
+  .stages {
+    padding-bottom: clamp(3rem, 2rem + 4vw, 6rem);
+    display: grid;
+    gap: clamp(2.5rem, 1.5rem + 4vw, 5rem);
+  }
+
+  .stage {
+    display: grid;
+    grid-template-columns: 3.25rem minmax(0, 5fr) minmax(0, 6fr);
+    gap: 0 clamp(1.25rem, 0.8rem + 2vw, 2.75rem);
+    align-items: start;
+  }
+
+  .stage-index {
+    position: relative;
+    font-family: "SiteMono", ui-monospace, monospace;
+    font-size: 0.82rem;
+    letter-spacing: 0.06em;
+    color: var(--amber);
+    padding-top: 0.15rem;
+    font-variant-numeric: tabular-nums;
+    align-self: stretch;
+  }
+
+  .stage-index::before {
+    content: "";
+    position: absolute;
+    left: 0.28rem;
+    top: 2.1rem;
+    bottom: -0.6rem;
+    width: 1px;
+    background: linear-gradient(180deg, var(--hairline), transparent);
+  }
+
+  .stage:last-child .stage-index::before { display: none; }
+
+  .stage-art {
+    margin: 0;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    background: var(--surface);
+    box-shadow: var(--shadow);
+    outline: 1px solid var(--tile-ring);
+    outline-offset: -1px;
+  }
+
+  .stage-art img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .stage-body h2 {
+    font-family: "SiteDisplay", "Helvetica Neue", Arial, sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: -0.005em;
+    line-height: 1.06;
+    font-size: clamp(1.35rem, 1.1rem + 1.1vw, 2.05rem);
+    text-wrap: balance;
+    margin: 0.1rem 0 0.9rem;
+  }
+
+  .stage-body p {
+    margin: 0;
+    max-width: var(--measure);
+    color: var(--mist);
+  }
+
+  .term {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: "SiteMono", ui-monospace, monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--amber);
+    border: 1px solid var(--hairline);
+    padding: 0.3rem 0.6rem;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .term::before {
+    content: "";
+    width: 0.4rem;
+    height: 0.4rem;
+    background: var(--amber);
+  }
+
+  .yield {
+    margin: 1.4rem 0 0;
+    padding: 1.1rem 1.25rem;
+    background: var(--surface);
+    border-left: 2px solid var(--amber);
+  }
+
+  .yield dt {
+    font-family: "SiteMono", ui-monospace, monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--mist);
+    margin-bottom: 0.5rem;
+  }
+
+  .yield dd {
+    margin: 0;
+    font-size: 0.97rem;
+  }
+
+  .yield dd + dt { margin-top: 1.05rem; }
+
+  .check {
+    display: flex;
+    gap: 0.6rem;
+    margin-top: 1rem;
+    font-family: "SiteMono", ui-monospace, monospace;
+    font-size: 0.76rem;
+    line-height: 1.5;
+    color: var(--steel);
+  }
+
+  .check::before {
+    content: "✓";
+    color: var(--amber);
+    flex: none;
+  }
+
+  /* ---------- close ---------- */
+
+  .close {
+    border-top: 1px solid var(--hairline);
+    background: var(--surface);
+  }
+
+  .close-inner {
+    padding-block: clamp(2.75rem, 2rem + 4vw, 5rem);
+    display: grid;
+    gap: clamp(1.5rem, 1rem + 3vw, 3.5rem);
+    grid-template-columns: minmax(0, 1fr);
+    align-items: start;
+  }
+
+  .close h2 {
+    font-family: "SiteDisplay", Arial, sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: -0.01em;
+    line-height: 1.05;
+    font-size: clamp(1.5rem, 1.2rem + 1.6vw, 2.4rem);
+    margin: 0.6rem 0 0.9rem;
+    text-wrap: balance;
+  }
+
+  .close p {
+    margin: 0;
+    max-width: 50ch;
+    color: var(--mist);
+  }
+
+  .close-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.85rem;
+    margin-top: 1.6rem;
+  }
+
+  .btn {
+    font-family: "SiteMono", ui-monospace, monospace;
+    font-size: 0.76rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    text-decoration: none;
+    padding: 0.85rem 1.4rem;
+    border: 1px solid var(--amber);
+    color: var(--ground);
+    background: var(--amber);
+  }
+
+  .btn.ghost {
+    background: transparent;
+    color: var(--chalk);
+    border-color: var(--hairline);
+  }
+
+  .btn:focus-visible,
+  a:focus-visible {
+    outline: 2px solid var(--amber);
+    outline-offset: 3px;
+  }
+
+  .draft-note {
+    border-top: 1px solid var(--hairline);
+    padding-block: 1.25rem 2.5rem;
+    font-family: "SiteMono", ui-monospace, monospace;
+    font-size: 0.7rem;
+    line-height: 1.6;
+    letter-spacing: 0.03em;
+    color: var(--steel);
+  }
+
+  /* ---------- motion ---------- */
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(14px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+
+  .reveal.seen {
+    opacity: 1;
+    transform: none;
+  }
+
+  .ribbon div::after {
+    transition: transform 0.9s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+
+  .ribbon.pending div::after { transform: scaleX(0); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .reveal, .reveal.seen { opacity: 1; transform: none; transition: none; }
+    .ribbon div::after { transition: none; }
+    .ribbon.pending div::after { transform: scaleX(var(--fill, 1)); }
+  }
+
+  /* ---------- narrow ---------- */
+
+  @media (max-width: 900px) {
+    .stage {
+      grid-template-columns: 2.5rem minmax(0, 1fr);
+      gap: 0 1rem;
+    }
+    .stage-art {
+      grid-column: 2;
+      margin-bottom: 1.4rem;
+      aspect-ratio: 16 / 10;
+    }
+    .stage-body { grid-column: 2; }
+    .stage-index::before { top: 1.9rem; }
+    .ribbon-legend { grid-template-columns: 1fr 1fr; }
+    .ribbon-legend div { padding-right: 0; }
+  }
+
+  @media (min-width: 901px) {
+    .close-inner { grid-template-columns: 3.25rem minmax(0, 5fr) minmax(0, 6fr); }
+  }
+</style>
+
+<header class="hero">
+  <div class="hero-art" role="img" aria-label="Пять этапов стройки: геодезия участка, подписание договора, сборка панелей в цеху, монтаж краном, передача ключей"></div>
+  <div class="hero-scrim"></div>
+  <div class="wrap hero-inner">
+    <p class="eyebrow">Дом из домокомплекта · производство и монтаж</p>
+    <h1>От участка<span class="thin">до ключей</span></h1>
+    <p class="lede">Пять этапов, по которым идёт стройка. Для каждого — что происходит на площадке, сколько это занимает и какие документы остаются у вас на руках.</p>
+    <div class="facts">
+      <div><b>5</b>этапов</div>
+      <div><b>12</b>недель до ключей</div>
+      <div><b>1</b>смета, фиксированная</div>
+      <div><b>2</b>приёмки с вашим участием</div>
+    </div>
+  </div>
+</header>
+
+<section class="wrap schedule">
+  <div class="schedule-head">
+    <span>График по этапам</span>
+    <span>81 день · длина полосы пропорциональна сроку</span>
+  </div>
+  <div class="ribbon pending" style="--tracks: 4fr 6fr 24fr 12fr 35fr" aria-hidden="true">
+    <div style="--fill: 1"></div>
+    <div style="--fill: 1"></div>
+    <div style="--fill: 1"></div>
+    <div style="--fill: 1"></div>
+    <div style="--fill: 1"></div>
+  </div>
+  <div class="ribbon-legend">
+    <div><b>01</b>Геодезия · 3–5 дн.</div>
+    <div><b>02</b>Договор и проект · 5–7 дн.</div>
+    <div><b>03</b>Производство · 3–4 нед.</div>
+    <div><b>04</b>Монтаж · 10–14 дн.</div>
+    <div><b>05</b>Отделка и сдача · 4–6 нед.</div>
+  </div>
+</section>
+
+<main class="wrap stages">
+
+  <article class="stage reveal">
+    <div class="stage-index">01</div>
+    <figure class="stage-art">
+      <img src="{{ASSET:step1.webp}}" alt="Тахеометр на штативе и планшет с топосъёмкой на участке" width="700" height="698">
+    </figure>
+    <div class="stage-body">
+      <span class="term">3–5 дней</span>
+      <h2>Геодезия и посадка дома</h2>
+      <p>Выезжаем на участок: снимаем рельеф и границы, находим точку ввода коммуникаций, отбираем пробы грунта. Проверяем, встаёт ли дом в пятно застройки с нормативными отступами и на какой отметке — до того, как считать фундамент.</p>
+      <dl class="yield">
+        <dt>Вы получаете</dt>
+        <dd>Топоплан 1:500, схему посадки дома, отчёт по грунтам, смету на фундамент.</dd>
+        <dt>Что это решает</dt>
+        <dd>Тип фундамента и высотную отметку — две позиции, из-за которых сметы чаще всего «уезжают» по ходу стройки.</dd>
+      </dl>
+      <p class="check">Отступы от границ и красных линий сверяем с ГПЗУ до подписания договора.</p>
+    </div>
+  </article>
+
+  <article class="stage reveal">
+    <div class="stage-index">02</div>
+    <figure class="stage-art">
+      <img src="{{ASSET:step2.webp}}" alt="Подписание договора: документ с печатью и перьевая ручка" width="700" height="698">
+    </figure>
+    <div class="stage-body">
+      <span class="term">5–7 дней</span>
+      <h2>Договор и рабочий проект</h2>
+      <p>Фиксируем состав работ, смету и график платежей до начала стройки. Параллельно проект доводим до рабочего: планы, узлы примыканий, спецификация каждой панели и ведомость окон. В производство уходит документация, а не эскиз.</p>
+      <dl class="yield">
+        <dt>Вы получаете</dt>
+        <dd>Договор с приложениями, смету без графы «дополнительные работы», рабочие чертежи, календарный график.</dd>
+        <dt>Как меняется цена</dt>
+        <dd>Только допсоглашением и только по вашей инициативе. Ошибки проекта исправляем за свой счёт.</dd>
+      </dl>
+      <p class="check">Платёж за этап проходит после подписания акта по предыдущему.</p>
+    </div>
+  </article>
+
+  <article class="stage reveal">
+    <div class="stage-index">03</div>
+    <figure class="stage-art">
+      <img src="{{ASSET:step3.webp}}" alt="Бригада собирает стеновую панель на сборочном столе в цеху" width="700" height="698">
+    </figure>
+    <div class="stage-body">
+      <span class="term">3–4 недели</span>
+      <h2>Производство домокомплекта</h2>
+      <p>Стены собираем в цеху на сборочном столе, а не на морозе: строганый брус камерной сушки, ЛВЛ в проёмах, геометрия каждой панели проверяется по диагоналям. Панель получает номер из монтажной схемы — на площадке её не нужно подгонять.</p>
+      <dl class="yield">
+        <dt>Вы получаете</dt>
+        <dd>Пронумерованный домокомплект, монтажные схемы, фотоотчёт по каждой смене.</dd>
+        <dt>Контроль в цеху</dt>
+        <dd>Влажность бруса 12–16 %, отклонение геометрии панели не более 2 мм, узлы крепежа по спецификации проекта.</dd>
+      </dl>
+      <p class="check">Пока идёт цех, на участке параллельно делается фундамент — этапы не ждут друг друга.</p>
+    </div>
+  </article>
+
+  <article class="stage reveal">
+    <div class="stage-index">04</div>
+    <figure class="stage-art">
+      <img src="{{ASSET:step4.webp}}" alt="Кран устанавливает каркасную панель на готовый фундамент" width="700" height="698">
+    </figure>
+    <div class="stage-body">
+      <span class="term">10–14 дней</span>
+      <h2>Монтаж и закрытый контур</h2>
+      <p>Обвязка по фундаменту, сборка стен краном по схеме, перекрытия, кровля, окна и входная дверь. Дом выходит на закрытый тепловой контур за один заезд бригады — стройка перестаёт зависеть от погоды.</p>
+      <dl class="yield">
+        <dt>Вы получаете</dt>
+        <dd>Собранный каркас, кровлю, установленные окна, закрытый контур, готовый под инженерию.</dd>
+        <dt>Что фиксируем актом</dt>
+        <dd>Скрытые работы по фундаменту, анкеровку обвязки, узлы крепления стен и стропильной системы — с фотофиксацией до закрытия.</dd>
+      </dl>
+      <p class="check">Кровельный контур закрываем в тот же заезд, что и стены: каркас не стоит под открытым небом.</p>
+    </div>
+  </article>
+
+  <article class="stage reveal">
+    <div class="stage-index">05</div>
+    <figure class="stage-art">
+      <img src="{{ASSET:step5.webp}}" alt="Ключи от готового дома над планом этажа" width="700" height="762">
+    </figure>
+    <div class="stage-body">
+      <span class="term">4–6 недель</span>
+      <h2>Инженерия, отделка и сдача</h2>
+      <p>Электрика, водоснабжение, отопление и вентиляция, затем отделка по выбранному пакету. Сдаём дом не «на словах»: прогреваем, опрессовываем систему, проходим по списку приёмки вместе с вами и закрываем замечания до передачи ключей.</p>
+      <dl class="yield">
+        <dt>Вы получаете</dt>
+        <dd>Акт приёмки, паспорт дома с исполнительными схемами инженерии, гарантийные обязательства, ключи.</dd>
+        <dt>Проверки при сдаче</dt>
+        <dd>Опрессовка отопления, тепловизионный осмотр контура, замер расходов вентиляции, проверка автоматов под нагрузкой.</dd>
+      </dl>
+      <p class="check">Замечания из листа приёмки закрываем до передачи ключей, а не после.</p>
+    </div>
+  </article>
+
+</main>
+
+<section class="close">
+  <div class="wrap close-inner">
+    <div class="stage-index" aria-hidden="true">06</div>
+    <div>
+      <p class="eyebrow">Следующий шаг</p>
+      <h2>Начинается с выезда на участок</h2>
+      <p>Пришлите кадастровый номер и планировку, которая вам нравится. Посчитаем фундамент и домокомплект по вашему участку и покажем график по этапам с датами.</p>
+      <div class="close-actions">
+        <a class="btn" href="#">Записаться на выезд</a>
+        <a class="btn ghost" href="#">Скачать пример договора</a>
+      </div>
+    </div>
+    <div>
+      <dl class="yield">
+        <dt>Что нужно от вас на старте</dt>
+        <dd>Кадастровый номер участка, ГПЗУ или градплан, если есть, и пожелания по планировке.</dd>
+        <dt>Что будет на руках через неделю</dt>
+        <dd>Смета по вашему участку, график по пяти этапам, проект договора.</dd>
+      </dl>
+    </div>
+  </div>
+  <div class="wrap draft-note">
+    Черновик страницы процесса. Сроки, допуски и гарантийные формулировки — примеры: замените их значениями из ваших регламентов перед публикацией.
+  </div>
+</section>
+
+<script>
+  (function () {
+    var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var ribbon = document.querySelector(".ribbon");
+
+    if (reduce) {
+      document.querySelectorAll(".reveal").forEach(function (el) { el.classList.add("seen"); });
+      if (ribbon) { ribbon.classList.remove("pending"); }
+      return;
+    }
+
+    if (!("IntersectionObserver" in window)) {
+      document.querySelectorAll(".reveal").forEach(function (el) { el.classList.add("seen"); });
+      if (ribbon) { ribbon.classList.remove("pending"); }
+      return;
+    }
+
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (!entry.isIntersecting) { return; }
+        entry.target.classList.add("seen");
+        io.unobserve(entry.target);
+      });
+    }, { rootMargin: "0px 0px -12% 0px", threshold: 0.08 });
+
+    document.querySelectorAll(".reveal").forEach(function (el) { io.observe(el); });
+
+    if (ribbon) {
+      // Segments grow left to right, staggered, once the schedule is in view.
+      var ribbonIO = new IntersectionObserver(function (entries, obs) {
+        entries.forEach(function (entry) {
+          if (!entry.isIntersecting) { return; }
+          Array.prototype.forEach.call(ribbon.children, function (seg, i) {
+            seg.style.transitionDelay = i * 110 + "ms";
+          });
+          ribbon.classList.remove("pending");
+          obs.unobserve(entry.target);
+        });
+      }, { threshold: 0.4 });
+      ribbonIO.observe(ribbon);
+    }
+  })();
+</script>
